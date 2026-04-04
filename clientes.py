@@ -25,14 +25,14 @@ class Cliente:
         if "@" not in email:
             raise ValueError("Erro: O email inserido é inválido.")
         
-            self.nome = nome
-            self.cpf = cpf
-            self.idade = idade
-            self.cidade = cidade
-            self.email = email
-            self.telefone = telefone
-            self.status = StatusCliente.ATIVO
-            self.historico_reservas = []
+        self.nome = nome
+        self.cpf = cpf
+        self.idade = idade
+        self.cidade = cidade
+        self.email = email
+        self.telefone = telefone
+        self.status = StatusCliente.ATIVO
+        self.historico_reservas = []
 
     def __str__(self):
         return f"{self.nome} ({self.cpf}) - Status: {self.status.value}"
