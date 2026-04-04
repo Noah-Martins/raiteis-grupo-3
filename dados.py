@@ -39,7 +39,7 @@ def carregar_quartos():
     except:
       return False
 
-  # Salva os dados dos quartos
+# Salva os dados dos quartos
 def salvar_quartos(quartos):
   quartos_formatados = [{chave: valor for chave, valor in q.__dict__.items()} for q in quartos.values()] # Formata os objetos Quarto em dicts
   colunas = ["numero", "tipo", "status", "preco"] # Defini as colunas do CSV
