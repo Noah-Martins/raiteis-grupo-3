@@ -1,6 +1,6 @@
 from enum import Enum
 import os
-from dados import salvar_clientes
+
 
 # Definição do status do cliente
 class StatusCliente(Enum):
@@ -50,7 +50,9 @@ class Cliente:
         }
 
 def cadastrar_novo_cliente(clientes_dict, nome, cpf, idade, cidade, email, telefone):
-    # Verifica duplicidade (CPF é a chave única) [cite: 36]
+    # Verifica duplicidade (CPF é a chave única) 
+    from dados import salvar_clientes
+    
     if cpf in clientes_dict:
         return False, "Erro: Este CPF já está cadastrado."
 
