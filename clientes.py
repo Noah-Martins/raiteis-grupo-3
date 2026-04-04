@@ -48,6 +48,14 @@ class Cliente:
             'telefone': self.telefone,
             'status': self.status.value
         }
+    # MÉTODO NECESSÁRIO PARA O CARREGAMENTO DO CSV
+    def mudar_status(self, novo_status_texto):
+        for status_enum in StatusCliente:
+            if status_enum.value == novo_status_texto:
+                self.status = status_enum
+                return
+        # Mantém como ativo caso o texto seja inválido ou não encontrado
+        self.status = StatusCliente.ATIVO
 
 def cadastrar_novo_cliente(clientes_dict, nome, cpf, idade, cidade, email, telefone):
     # Verifica duplicidade (CPF é a chave única) 
