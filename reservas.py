@@ -1,22 +1,20 @@
-
+from dados import clientes, quartos, reservas
 from clientes import StatusCliente
 
-#BUSCAS#
+# BUSCAS
 
 def buscar_quarto(quartos, quarto_id):
-    for i in quartos:
-        if i["id"] == quarto_id:
-            return i
-    return None
+    return quartos.get(quarto_id)
 
 
 def buscar_reservas(reservas, reserva_id):
-    for j in reservas:
-        if j["id"] == reserva_id:
-            return j
+    for r in reservas:
+        if r["id"] == reserva_id:
+            return r
     return None
 
-#REGISTRAR RESESERVAS#
+# REGISTRAR RESERVA
+
 
 def registrar_reserva(clientesdict, quartos, reservas):
     cpf = input("CPF do cliente: ").strip()
@@ -28,9 +26,8 @@ def registrar_reserva(clientesdict, quartos, reservas):
         return
     
     try:
-        quarto_id = int(input("Número do quarto: "))
+        quarto_id = input("Número do quarto: ").strip()
         diarias = int(input("Quantidade de diárias: "))
-
     except:
         print("Entrada não-válida.\n")
         return
@@ -42,14 +39,14 @@ def registrar_reserva(clientesdict, quartos, reservas):
     quarto = buscar_quarto(quartos, quarto_id)
 
     if not quarto:
-        print("Quarto não registrado. \n")
+        print("Quarto não registrado.\n")
         return
     
-    if quarto["status"] != "disponivel":
-        print("Quarto indisponìvel.\n")
+    if quarto.status != "Disponível":
+        print("Quarto indisponível.\n")
         return
     
-    valor_pagar = quarto["preco"]*diarias
+    valor_pagar = quarto.preco * diarias
 
     reserva = {
         "id": len(reservas) + 1,
@@ -62,23 +59,25 @@ def registrar_reserva(clientesdict, quartos, reservas):
 
     reservas.append(reserva)
 
-    quarto["status"] = "reservado"
+    quarto.mudar_status("reservado")
     cliente.status = StatusCliente.RESERVADO
     cliente.historico_reservas.append(reserva)
-    print(f"Reserva criada! Total: R${valor_pagar:.2f}")
 
+    print(f"Reserva criada. Total: R${valor_pagar:.2f}")
+
+# CONSULTAR RESERVAS
 
 def consultar_reservas(reservas, clientesdict):
     if not reservas:
         print("Sem reservas encontradas.\n")
         return
 
-    print("\n <RESERVAS>\n")
+    print("\n<RESERVAS>\n")
 
     for r in reservas:
         cliente = clientesdict.get(r["cpfcliente"])
 
-        nomecliente = cliente.nome
+        nomecliente = cliente.nome if cliente else "Desconhecido"
 
         print(f"""
 ID: {r['id']}
@@ -88,9 +87,8 @@ Diárias: {r['diarias']}
 Valor: R${r['valor_pagar']:.2f}
 Status: {r['status']}
 """)
-        
 
-#CHECKIN E CHECKOUT#
+# CHECK-IN
 
 def realizar_checkin(clientesdict, reservas, quartos):
     cpf = input("CPF do cliente: ").strip()
@@ -98,7 +96,7 @@ def realizar_checkin(clientesdict, reservas, quartos):
     cliente = clientesdict.get(cpf)
 
     if not cliente:
-        print("Cliente não registrado\n")
+        print("Cliente não registrado.\n")
         return
     
     for r in reservas:
@@ -107,18 +105,17 @@ def realizar_checkin(clientesdict, reservas, quartos):
             quarto = buscar_quarto(quartos, r["quarto_id"])
 
             if quarto:
-                quarto["status"] = "ocupado"
+                quarto.mudar_status("ocupado")
 
             r["status"] = "ocupado"
             cliente.status = StatusCliente.HOSPEDADO
 
-            print("Check-in realizado. \n")
+            print("Check-in realizado.\n")
             return
-        
 
-    print("Reserva não encontrada ou já realizada. \n")
+    print("Reserva não encontrada ou já realizada.\n")
 
-
+# CHECK-OUT
 
 def realizar_checkout(clientesdict, reservas, quartos):
     cpf = input("CPF do cliente: ").strip()
@@ -135,12 +132,13 @@ def realizar_checkout(clientesdict, reservas, quartos):
             quarto = buscar_quarto(quartos, r["quarto_id"])
 
             if quarto:
-                quarto["status"] = "disponivel"
+                quarto.mudar_status("disponivel")
 
             r["status"] = "finalizado"
             cliente.status = StatusCliente.INATIVO
 
-            print("Check-out realizadO.\n")
+            print("Check-out realizado.\n")
             return
 
-    print("Reserva não encontrada ou não está em andamento\n")                                       
+    print("Reserva não encontrada ou não está em andamento.\n")
+
