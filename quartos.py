@@ -1,5 +1,4 @@
 import csv
-from dados import carregar_quartos
 
 class Quarto():
   dicionario_status = {
@@ -24,10 +23,9 @@ class Quarto():
     
     if not self.dicionario_status.get(novo_status, None): # Valida o novo_status
       print("Status não existente")
-
     else:
       self.status = Quarto.dicionario_status[novo_status] # Atualiza o status do quarto
-
+      
       print("Status atualizado com sucesso!")
 
 class Hotel():
@@ -47,8 +45,12 @@ class Hotel():
   }
 
   def __init__(self):
-    self.quartos = self.carregar_quartos() or self.criar_quartos() # Inicializa os dados do quarto
-    
+    from dados import carregar_quartos()
+    quartos = carrer_quartos()
+    if not quartos: # Inicializa os dados do quarto
+      self.quartos = self.criar_quartos()
+    else:
+      self.quartos = self.criar_quartos() | quartos
   # Preenche o dict quartos do zero
   def criar_quartos(self):
   
