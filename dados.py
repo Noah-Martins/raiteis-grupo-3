@@ -37,7 +37,7 @@ def carregar_quartos():
     with open("Quartos.csv", "r", encoding="utf-8") as arquivo: 
       dados = csv.DictReader(arquivo) # Escreve os dados do CSV em dados
       return  {linha['numero']: Quarto(**linha) for linha in dados} # Retorna os dados do CSV em um dict
-  except:
+  except FileNotFoundError:
       return False
 
 # Salva os dados dos quartos
