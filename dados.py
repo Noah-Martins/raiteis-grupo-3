@@ -30,16 +30,16 @@ def carregar_clientes():
             clientes_carregados[c.cpf] = c
     return clientes_carregados
 
- # Carrega os dados dos quartos
-  def carregar_quartos():
-    try:
-      with open("Quartos.csv", "r", encoding="utf-8") as arquivo: 
-        dados = csv.DictReader(arquivo) # Escreve os dados do CSV em dados
-        return  {linha['numero']: Quarto(**linha) for linha in dados} # Retorna os dados do CSV em um dict
-     except:
+# Carrega os dados dos quartos
+def carregar_quartos():
+  try:
+    with open("Quartos.csv", "r", encoding="utf-8") as arquivo: 
+      dados = csv.DictReader(arquivo) # Escreve os dados do CSV em dados
+      return  {linha['numero']: Quarto(**linha) for linha in dados} # Retorna os dados do CSV em um dict
+    except:
       return False
 
   # Salva os dados dos quartos
-  def salvar_quartos(quartos):
-    quartos_formatados = [{chave: valor for chave, valor in q.__dict__.items()} for q in quartos.values()] # Formata os objetos Quarto em dicts
-    colunas = ["numero", "tipo", "status", "preco"] # Defini as colunas do CSV
+def salvar_quartos(quartos):
+  quartos_formatados = [{chave: valor for chave, valor in q.__dict__.items()} for q in quartos.values()] # Formata os objetos Quarto em dicts
+  colunas = ["numero", "tipo", "status", "preco"] # Defini as colunas do CSV
