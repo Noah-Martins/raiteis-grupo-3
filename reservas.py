@@ -1,20 +1,50 @@
-from dados import clientes, quartos, reservas
+import csv
+import os
 from clientes import StatusCliente
+from dados import salvar_clientes, salvar_quartos
 
-# BUSCAS
+
+ARQUIVO_RESERVAS = "reservas.csv"
+
+#persistencia arqv
+
+def salvar_reservas(reservas):
+    with open(ARQUIVO_RESERVAS, mode='w', newline='', encoding='utf-8') as file:
+        campos = ["id", "cpfcliente", "quarto_id", "diarias", "valor_pagar", "status"]
+        writer = csv.DictWriter(file, fieldnames=campos)
+
+        writer.writeheader()
+        writer.writerows(reservas)
+
+
+def carregar_reservas():
+    if not os.path.exists(ARQUIVO_RESERVAS):
+        return []
+
+    reservas = []
+
+    with open(ARQUIVO_RESERVAS, mode='r', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+
+        for row in reader:
+            reservas.append({
+                "id": int(row["id"]),
+                "cpfcliente": row["cpfcliente"],
+                "quarto_id": row["quarto_id"],
+                "diarias": int(row["diarias"]),
+                "valor_pagar": float(row["valor_pagar"]),
+                "status": row["status"]
+            })
+
+    return reservas
+
+#buscas
 
 def buscar_quarto(quartos, quarto_id):
     return quartos.get(quarto_id)
 
 
-def buscar_reservas(reservas, reserva_id):
-    for r in reservas:
-        if r["id"] == reserva_id:
-            return r
-    return None
-
-# REGISTRAR RESERVA
-
+#registrar reservas 
 
 def registrar_reserva(clientesdict, quartos, reservas):
     cpf = input("CPF do cliente: ").strip()
@@ -63,9 +93,13 @@ def registrar_reserva(clientesdict, quartos, reservas):
     cliente.status = StatusCliente.RESERVADO
     cliente.historico_reservas.append(reserva)
 
+    salvar_reservas(reservas)
+    salvar_clientes(clientesdict)
+    salvar_quartos(quartos)
+
     print(f"Reserva criada. Total: R${valor_pagar:.2f}")
 
-# CONSULTAR RESERVAS
+#Consulta
 
 def consultar_reservas(reservas, clientesdict):
     if not reservas:
@@ -76,19 +110,18 @@ def consultar_reservas(reservas, clientesdict):
 
     for r in reservas:
         cliente = clientesdict.get(r["cpfcliente"])
-
-        nomecliente = cliente.nome if cliente else "Desconhecido"
+        nome = cliente.nome if cliente else "Desconhecido"
 
         print(f"""
 ID: {r['id']}
-Cliente: {nomecliente} ({r['cpfcliente']})
+Cliente: {nome} ({r['cpfcliente']})
 Quarto: {r['quarto_id']}
 Diárias: {r['diarias']}
 Valor: R${r['valor_pagar']:.2f}
 Status: {r['status']}
 """)
 
-# CHECK-IN
+# Check-in
 
 def realizar_checkin(clientesdict, reservas, quartos):
     cpf = input("CPF do cliente: ").strip()
@@ -96,7 +129,7 @@ def realizar_checkin(clientesdict, reservas, quartos):
     cliente = clientesdict.get(cpf)
 
     if not cliente:
-        print("Cliente não registrado.\n")
+        print("Cliente não registrado\n")
         return
     
     for r in reservas:
@@ -110,12 +143,16 @@ def realizar_checkin(clientesdict, reservas, quartos):
             r["status"] = "ocupado"
             cliente.status = StatusCliente.HOSPEDADO
 
+            salvar_reservas(reservas)
+            salvar_clientes(clientesdict)
+            salvar_quartos(quartos)
+
             print("Check-in realizado.\n")
             return
 
     print("Reserva não encontrada ou já realizada.\n")
 
-# CHECK-OUT
+# Check-out
 
 def realizar_checkout(clientesdict, reservas, quartos):
     cpf = input("CPF do cliente: ").strip()
@@ -137,8 +174,11 @@ def realizar_checkout(clientesdict, reservas, quartos):
             r["status"] = "finalizado"
             cliente.status = StatusCliente.INATIVO
 
+            salvar_reservas(reservas)
+            salvar_clientes(clientesdict)
+            salvar_quartos(quartos)
+
             print("Check-out realizado.\n")
             return
 
-    print("Reserva não encontrada ou não está em andamento.\n")
-
+    print("Reserva não encontrada ou não está em andamento\n")
