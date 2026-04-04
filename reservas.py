@@ -1,4 +1,4 @@
-from dados import clientes, quartos, reservas
+
 from clientes import StatusCliente
 
 #BUSCAS#
@@ -14,7 +14,7 @@ def buscar_reservas(reservas, reserva_id):
     for j in reservas:
         if j["id"] == reserva_id:
             return j
-    return j
+    return None
 
 #REGISTRAR RESESERVAS#
 
@@ -64,8 +64,8 @@ def registrar_reserva(clientesdict, quartos, reservas):
 
     quarto["status"] = "reservado"
     cliente.status = StatusCliente.RESERVADO
-    cliente.historico.append(reserva)
-    print("Reserva criada! Total: R${valor_pagar}")
+    cliente.historico_reservas.append(reserva)
+    print(f"Reserva criada! Total: R${valor_pagar:.2f}")
 
 
 def consultar_reservas(reservas, clientesdict):
