@@ -75,7 +75,7 @@ def consultar_reservas(reservas, clientesdict):
 
     print("\n <RESERVAS>\n")
 
-    for i in reservas:
+    for r in reservas:
         cliente = clientesdict.get(r["cpfcliente"])
 
         nomecliente = cliente.nome
