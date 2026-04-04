@@ -1,4 +1,4 @@
-import json
+import csv
 
 class Quarto():
   dicionario_status = {
@@ -7,6 +7,7 @@ class Quarto():
     "ocupado" : "Ocupado"
   }
 
+  
   def __init__(self, numero: str, tipo: str, status: str, preco: str):
     self.numero = numero 
     self.tipo = tipo
@@ -25,7 +26,7 @@ class Quarto():
       print("Status não existente")
 
     else:
-      self.status = Quarto.dicionario_status[novo_status] # Atualiza o status do quarto
+      self.status = Quarto.dicionario_status[novo_status]
 
       print("Status atualizado com sucesso!")
 
@@ -46,7 +47,7 @@ class Hotel():
   }
 
   def __init__(self):
-    self.quartos = self.criar_quartos()
+    self.quartos = self.carregar_quartos() or self.criar_quartos()
     
   # Preenche o dict quartos do zero
   def criar_quartos(self):
@@ -64,19 +65,26 @@ class Hotel():
 
   # Carrega os dados dos quartos
   def carregar_quartos(self):
-    with open("Quartos.json", "r", encoding="utf-8") as arquivo: # Ler o .json com os dados salvos
+    try:
+      with open("Quartos.csv", "r", encoding="utf-8") as arquivo:
+        dados = csv.DictReader(arquivo)
+       
+        return  {linha['numero']: Quarto(**linha) for linha in dados}
+    
+    except:
+      return False
 
-      self.dados = json.load(arquivo)
-      self.quartos = {item['numero']: Quarto(**item) for item in self.dados} # Carrega os dados salvos no dic self.quartos
-
-      return self.quartos
   # Salva os dados dos quartos
   def salvar_quartos(self):
-    quartos_formatados = [{chave: valor for chave, valor in q.__dict__.items() if chave != 'dicionario_status'} for q in self.quartos.values()] # Formata os objetos em dicts
+    quartos_formatados = [{chave: valor for chave, valor in q.__dict__.items()} for q in self.quartos.values()]
+    colunas = ["numero", "tipo", "status", "preco"]
 
-    with open("Quartos.json", "w", encoding="utf-8") as arquivo: # Escreve os dados dos quartos no .json
-      json.dump(quartos_formatados, arquivo, indent=4, ensure_ascii=False) 
-
+    with open("Quartos.csv", "w", encoding="utf-8", newline="") as arquivo:
+      escritor = csv.DictWriter(arquivo, fieldnames=colunas)
+      
+      escritor.writeheader()
+      escritor.writerows(quartos_formatados)
+    
   # Busca um quarto
   def pesquisar_quarto(self, numero_quarto: str):
 
