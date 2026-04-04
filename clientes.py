@@ -36,6 +36,38 @@ class Cliente:
 
     def __str__(self):
         return f"{self.nome} ({self.cpf}) - Status: {self.status.value}"
+    
+
+    def para_dicionario(self):
+        return {
+            'nome': self.nome,
+            'cpf': self.cpf,
+            'idade': self.idade,
+            'cidade': self.cidade,
+            'email': self.email,
+            'telefone': self.telefone,
+            'status': self.status.value
+        }
+
+def cadastrar_novo_cliente(clientes_dict, nome, cpf, idade, cidade, email, telefone):
+    # Verifica duplicidade (CPF é a chave única) [cite: 36]
+    if cpf in clientes_dict:
+        return False, "Erro: Este CPF já está cadastrado."
+
+    try:
+        # Tenta criar o objeto (isso vai disparar as validações do __init__)
+        novo = Cliente(nome, cpf, idade, cidade, email, telefone)
+        clientes_dict[cpf] = novo
+        
+       # Salva a nova base de clientes no arquivo CSV
+        salvar_clientes(clientes_dict)
+        return True, f"Cliente {nome} cadastrado com sucesso!"
+    except ValueError as x:
+        return False, str(x)
+
+
+def pesquisar_cliente(clientes_dict, cpf):
+    return clientes_dict.get(cpf, None)
 
 
 
