@@ -69,8 +69,9 @@ def registrar_reserva(clientesdict, quartos, reservas):
 
 
 def consultar_reservas(reservas, clientesdict):
-    if not reservas("Sem reservas encontradas.\n")
-    return
+    if not reservas:
+        print("Sem reservas encontradas.\n")
+        return
 
     print("\n <RESERVAS>\n")
 
@@ -79,11 +80,67 @@ def consultar_reservas(reservas, clientesdict):
 
         nomecliente = cliente.nome
 
-         print(f"""
+        print(f"""
 ID: {r['id']}
-Cliente: {nome_cliente} ({r['cpfcliente']})
+Cliente: {nomecliente} ({r['cpfcliente']})
 Quarto: {r['quarto_id']}
 Diárias: {r['diarias']}
 Valor: R${r['valor_pagar']:.2f}
 Status: {r['status']}
 """)
+        
+
+#CHECKIN E CHECKOUT#
+
+def realizar_checkin(clientesdict, reservas, quartos):
+    cpf = input("CPF do cliente: ").strip()
+
+    cliente = clientesdict.get(cpf)
+
+    if not cliente:
+        print("Cliente não registrado\n")
+        return
+    
+    for r in reservas:
+        if r["cpfcliente"] == cpf and r["status"] == "reservado":
+
+            quarto = buscar_quarto(quartos, r["quarto_id"])
+
+            if quarto:
+                quarto["status"] = "ocupado"
+
+            r["status"] = "ocupado"
+            cliente.status = StatusCliente.HOSPEDADO
+
+            print("Check-in realizado. \n")
+            return
+        
+
+    print("Reserva não encontrada ou já realizada. \n")
+
+
+
+def realizar_checkout(clientesdict, reservas, quartos):
+    cpf = input("CPF do cliente: ").strip()
+
+    cliente = clientesdict.get(cpf)
+
+    if not cliente:
+        print("Cliente não registrado.\n")
+        return
+
+    for r in reservas:
+        if r["cpfcliente"] == cpf and r["status"] == "ocupado":
+
+            quarto = buscar_quarto(quartos, r["quarto_id"])
+
+            if quarto:
+                quarto["status"] = "disponivel"
+
+            r["status"] = "finalizado"
+            cliente.status = StatusCliente.INATIVO
+
+            print("Check-out realizadO.\n")
+            return
+
+    print("Reserva não encontrada ou não está em andamento\n")                                       
