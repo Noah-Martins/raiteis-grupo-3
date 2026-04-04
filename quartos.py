@@ -1,4 +1,5 @@
 import csv
+from dados import carregar_quartos
 
 class Quarto():
   dicionario_status = {
@@ -61,28 +62,6 @@ class Hotel():
     suites = {str(i) : Quarto(str(i), Hotel.tipos["suite"], "Disponivel", Hotel.precos["suite"]) for i in range(601, 651)}
 
     return standard | master | deluxes | suites 
-
-  # Carrega os dados dos quartos
-  def carregar_quartos(self):
-    try:
-      with open("Quartos.csv", "r", encoding="utf-8") as arquivo: 
-        dados = csv.DictReader(arquivo) # Escreve os dados do CSV em dados
-       
-        return  {linha['numero']: Quarto(**linha) for linha in dados} # Retorna os dados do CSV em um dict
-    
-    except:
-      return False
-
-  # Salva os dados dos quartos
-  def salvar_quartos(self):
-    quartos_formatados = [{chave: valor for chave, valor in q.__dict__.items()} for q in self.quartos.values()] # Formata os objetos Quarto em dicts
-    colunas = ["numero", "tipo", "status", "preco"] # Defini as colunas do CSV
-
-    with open("Quartos.csv", "w", encoding="utf-8", newline="") as arquivo:
-      escritor = csv.DictWriter(arquivo, fieldnames=colunas) # Converte o dicionário em texto 
-      
-      escritor.writeheader() # Cabeçalho de colunas 
-      escritor.writerows(quartos_formatados) # Dados em texto(CSV)
     
   # Busca um quarto
   def pesquisar_quarto(self, numero_quarto: str):
