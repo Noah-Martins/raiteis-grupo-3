@@ -1,6 +1,7 @@
 import csv
 import os
 from clientes import Cliente, popular_base
+from quartos import Quarto
 
 
 NOME_ARQUIVO = "clientes.csv"
@@ -36,10 +37,19 @@ def carregar_quartos():
     with open("Quartos.csv", "r", encoding="utf-8") as arquivo: 
       dados = csv.DictReader(arquivo) # Escreve os dados do CSV em dados
       return  {linha['numero']: Quarto(**linha) for linha in dados} # Retorna os dados do CSV em um dict
-    except:
+  except:
       return False
 
 # Salva os dados dos quartos
 def salvar_quartos(quartos):
-  quartos_formatados = [{chave: valor for chave, valor in q.__dict__.items()} for q in quartos.values()] # Formata os objetos Quarto em dicts
-  colunas = ["numero", "tipo", "status", "preco"] # Defini as colunas do CSV
+    with open("Quartos.csv", mode='w', newline='', encoding='utf-8') as arquivo:
+        colunas = ["numero", "tipo", "status", "preco"]
+        writer = csv.DictWriter(arquivo, fieldnames=colunas)
+        writer.writeheader()
+        for quarto in quartos.values():
+            writer.writerow({
+                "numero": quarto.numero,
+                "tipo":   quarto.tipo,
+                "status": quarto.status,
+                "preco":  quarto.preco
+            })
