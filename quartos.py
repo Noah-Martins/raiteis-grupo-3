@@ -6,7 +6,6 @@ class Quarto():
     "reservado" : "Reservado",
     "ocupado" : "Ocupado"
   }
-
   
   def __init__(self, numero: str, tipo: str, status: str, preco: str):
     self.numero = numero 
@@ -20,13 +19,13 @@ class Quarto():
 
   # Muda o atributo staus do quarto
   def mudar_status(self, novo_status: str):
-    novo_status = novo_status.strip().lower().replace("í", "i")
+    novo_status = novo_status.strip().lower().replace("í", "i") # Formata novo_status no formato das chaves de self.dicionario_status
     
     if not self.dicionario_status.get(novo_status, None): # Valida o novo_status
       print("Status não existente")
 
     else:
-      self.status = Quarto.dicionario_status[novo_status]
+      self.status = Quarto.dicionario_status[novo_status] # Atualiza o status do quarto
 
       print("Status atualizado com sucesso!")
 
@@ -47,7 +46,7 @@ class Hotel():
   }
 
   def __init__(self):
-    self.quartos = self.carregar_quartos() or self.criar_quartos()
+    self.quartos = self.carregar_quartos() or self.criar_quartos() # Inicializa os dados do quarto
     
   # Preenche o dict quartos do zero
   def criar_quartos(self):
@@ -61,29 +60,29 @@ class Hotel():
     # Cria os quartos Suite do 601 ao 650
     suites = {str(i) : Quarto(str(i), Hotel.tipos["suite"], "Disponivel", Hotel.precos["suite"]) for i in range(601, 651)}
 
-    return standard | master | deluxes | suites
+    return standard | master | deluxes | suites 
 
   # Carrega os dados dos quartos
   def carregar_quartos(self):
     try:
-      with open("Quartos.csv", "r", encoding="utf-8") as arquivo:
-        dados = csv.DictReader(arquivo)
+      with open("Quartos.csv", "r", encoding="utf-8") as arquivo: 
+        dados = csv.DictReader(arquivo) # Escreve os dados do CSV em dados
        
-        return  {linha['numero']: Quarto(**linha) for linha in dados}
+        return  {linha['numero']: Quarto(**linha) for linha in dados} # Retorna os dados do CSV em um dict
     
     except:
       return False
 
   # Salva os dados dos quartos
   def salvar_quartos(self):
-    quartos_formatados = [{chave: valor for chave, valor in q.__dict__.items()} for q in self.quartos.values()]
-    colunas = ["numero", "tipo", "status", "preco"]
+    quartos_formatados = [{chave: valor for chave, valor in q.__dict__.items()} for q in self.quartos.values()] # Formata os objetos Quarto em dicts
+    colunas = ["numero", "tipo", "status", "preco"] # Defini as colunas do CSV
 
     with open("Quartos.csv", "w", encoding="utf-8", newline="") as arquivo:
-      escritor = csv.DictWriter(arquivo, fieldnames=colunas)
+      escritor = csv.DictWriter(arquivo, fieldnames=colunas) # Converte o dicionário em texto 
       
-      escritor.writeheader()
-      escritor.writerows(quartos_formatados)
+      escritor.writeheader() # Cabeçalho de colunas 
+      escritor.writerows(quartos_formatados) # Dados em texto(CSV)
     
   # Busca um quarto
   def pesquisar_quarto(self, numero_quarto: str):
