@@ -1,7 +1,6 @@
 import csv
 import os
 from clientes import Cliente, popular_base
-from quartos import Quarto
 
 
 NOME_ARQUIVO = "clientes.csv"
@@ -33,6 +32,7 @@ def carregar_clientes():
 
 # Carrega os dados dos quartos
 def carregar_quartos():
+  from quartos import Quarto
   try:
     with open("Quartos.csv", "r", encoding="utf-8") as arquivo: 
       dados = csv.DictReader(arquivo) # Escreve os dados do CSV em dados
