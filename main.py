@@ -1,4 +1,4 @@
-from dados import carregar_clientes
+from dados import carregar_clientes, carregar_historico
 from quartos import Hotel
 from reservas import carregar_reservas
 from interface import menu_principal, menu_cliente, menu_funcionario
@@ -16,6 +16,7 @@ def main():
     quartos = hotel.quartos 
     
     reservas = carregar_reservas()
+    carregar_historico(clientes, reservas)
 
     # Variável de contole do loop principal
     rodando = True

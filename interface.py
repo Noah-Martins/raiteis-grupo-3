@@ -147,6 +147,23 @@ def cadastrar_quarto_interface(quartos):
     else:
         print("Tipo de quarto inválido.")
 
+def cadastrar_quarto_interface(quartos):
+    print("\n--- CADASTRAR NOVO QUARTO ---")
+    num = input("Número do quarto: ")
+    print("Tipos: standard, master, deluxe, suite")
+    tipo = input("Tipo: ").lower()
+    
+    # Importação local para evitar o ImportError
+    from quartos import adicionar_novo_quarto
+    from dados import salvar_quartos 
+    
+    if tipo in ["standard", "master", "deluxe", "suite"]:
+        if adicionar_novo_quarto(quartos, num, tipo):
+            salvar_quartos(quartos)
+            print(f"Quarto {num} cadastrado com sucesso!")
+    else:
+        print("Tipo de quarto inválido.")
+
 def listar_quartos(quartos):
     print("\n----- QUARTOS -----")
 

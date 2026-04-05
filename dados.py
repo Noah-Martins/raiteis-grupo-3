@@ -30,29 +30,35 @@ def carregar_clientes():
             clientes_carregados[c.cpf] = c
     return clientes_carregados
 
+#carrega o histórico de reservas para cada cliente a partir da lista de reservas
+def carregar_historico(clientes_dict, reservas):
+    for r in reservas:
+        cliente = clientes_dict.get(r["cpfcliente"])
+        if cliente:
+            cliente.historico_reservas.append(r)
+
 # Carrega os dados dos quartos
 def carregar_quartos():
-  from quartos import Quarto
-  try:
-    with open("Quartos.csv", "r", encoding="utf-8") as arquivo: 
-      dados = csv.DictReader(arquivo) # Escreve os dados do CSV em dados
-      return  {linha['numero']: Quarto(**linha) for linha in dados} # Retorna os dados do CSV em um dict
-  except FileNotFoundError:
-      return False
+    from quartos import Quarto
+    try:
+        with open("Quartos.csv", "r", encoding="utf-8") as arquivo: 
+            dados = csv.DictReader(arquivo) # Escreve os dados do CSV em dados
+            return  {linha['numero']: Quarto(**linha) for linha in dados} # Retorna os dados do CSV em um dict
+    except FileNotFoundError:
+        return False
 
 # Salva os dados dos quartos
 def salvar_quartos(quartos):
-  from quartos import Configuracoes
-  with open("Quartos.csv", mode='w', newline='', encoding='utf-8') as arquivo:
-    colunas = ["numero", "tipo", "status", "preco"]
-    writer = csv.DictWriter(arquivo, fieldnames=colunas)
-    writer.writeheader()
-    for quarto in quartos.values():
-      writer.writerow({
-          "numero": quarto.numero, 
-          "tipo": Configuracoes.tipos_invertido[quarto.tipo], 
-          "status": Configuracoes.status_invertido[quarto.status], 
-          "preco": Configuracoes.precos_invertido[str(int(quarto.preco))]
-      })
+    from quartos import Configuracoes
+    with open("Quartos.csv", mode='w', newline='', encoding='utf-8') as arquivo:
+        colunas = ["numero", "tipo", "status", "preco"]
+        writer = csv.DictWriter(arquivo, fieldnames=colunas)
+        writer.writeheader()
+        for quarto in quartos.values():
+            writer.writerow({
+                "numero": quarto.numero,
+                "tipo": Configuracoes.tipos_invertido[quarto.tipo],
+                "status": Configuracoes.status_invertido[quarto.status],
+                "preco": Configuracoes.precos_invertido[str(int(quarto.preco))]
+            })
 
-      
