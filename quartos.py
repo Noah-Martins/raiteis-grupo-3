@@ -37,9 +37,9 @@ class Hotel():
         from dados import carregar_quartos
         quartos_salvos = carregar_quartos()
         if not quartos_salvos:
-            self.quartos = criar_quartos()
+            self.quartos = self.criar_quartos()
         else:
-            self.quartos = quartos_salvos()
+            self.quartos = quartos_salvos
         
     # Preenche o dict quartos do zero
     def criar_quartos(self):
@@ -57,7 +57,7 @@ class Hotel():
         
     # Busca um quarto
     def pesquisar_quarto(self, numero_quarto: str):
-         return quartos.get(numero_quarto, None) # Valida a busca e retonar o objeto quarto
+         return self.quartos.get(numero_quarto, None) # Valida a busca e retonar o objeto quarto
 
 
 
