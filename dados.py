@@ -56,8 +56,9 @@ def salvar_quartos(quartos):
         writer.writeheader()
         for quarto in quartos.values():
             writer.writerow({
-                "numero": quarto.numero, 
-                "tipo": Configuracoes.tipos_invertido[quarto.tipo], 
-                "status": Configuracoes.status_invertido[quarto.status], 
+                "numero": quarto.numero,
+                "tipo": Configuracoes.tipos_invertido[quarto.tipo],
+                "status": Configuracoes.status_invertido[quarto.status],
                 "preco": Configuracoes.precos_invertido[str(int(quarto.preco))]
             })
+
