@@ -46,11 +46,11 @@ class Hotel():
 
   def __init__(self):
     from dados import carregar_quartos
-    quartos = carregar_quartos()
-    if not quartos: # Inicializa os dados do quarto
+    quartos_salvos = carregar_quartos()
+    if not quartos_salvos: # Inicializa os dados do quarto
       self.quartos = self.criar_quartos()
     else:
-      self.quartos = self.criar_quartos() | quartos
+      self.quartos = quartos_salvos
   # Preenche o dict quartos do zero
   def criar_quartos(self):
   
