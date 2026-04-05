@@ -42,14 +42,15 @@ def carregar_quartos():
 
 # Salva os dados dos quartos
 def salvar_quartos(quartos):
-    with open("Quartos.csv", mode='w', newline='', encoding='utf-8') as arquivo:
-        colunas = ["numero", "tipo", "status", "preco"]
-        writer = csv.DictWriter(arquivo, fieldnames=colunas)
-        writer.writeheader()
-        for quarto in quartos.values():
-            writer.writerow({
-                "numero": quarto.numero,
-                "tipo":   quarto.tipo,
-                "status": quarto.status,
-                "preco":  quarto.preco
-            })
+  from quartos import Configuracoes
+  with open("Quartos.csv", mode='w', newline='', encoding='utf-8') as arquivo:
+    colunas = ["numero", "tipo", "status", "preco"]
+    writer = csv.DictWriter(arquivo, fieldnames=colunas)
+    writer.writeheader()
+    for quarto in quartos.values():
+      writer.writerow({
+          "numero": quarto.numero, 
+          "tipo": Configuracoes.tipos_invertido[quarto.tipo], 
+          "status": Configuracoes.status_invertido[quarto.status], 
+          "preco": Configuracoes.precos_invertido[str(int(quarto.preco))]
+      })
