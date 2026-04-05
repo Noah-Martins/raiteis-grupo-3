@@ -1,4 +1,4 @@
-from dados import carregar_clientes
+from dados import carregar_clientes, salvar_quartos, popular_base
 from quartos import Hotel
 from reservas import carregar_reservas
 from interface import menu_principal, menu_cliente, menu_funcionario
