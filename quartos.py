@@ -34,6 +34,12 @@ class Quarto():
 
 class Hotel():
     def __init__(self):
+        from dados import carregar_quartos
+        quartos_salvos = carregar_quartos()
+        if not quartos_salvos:
+            self.quartos = criar_quartos()
+        else:
+            self.quartos = quartos_salvos()
         
     # Preenche o dict quartos do zero
     def criar_quartos(self):
