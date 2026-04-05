@@ -6,6 +6,7 @@ from reservas import (
     realizar_checkout
 )
 
+
 SENHA_FUNCIONARIO = "hotelraiteis"
 
 # Menu principal do hotel
@@ -36,11 +37,16 @@ def menu_cliente(clientes, quartos, reservas):
 
         elif op == "3":
             cpf = input("CPF: ")
-            cliente = pesquisar_cliente(clientes, cpf)
-            if cliente:
-                print(cliente)
+            cpf_formatado = formatar_cpf(cpf)
+            
+            if cpf_formatado:
+                cliente = pesquisar_cliente(clientes, cpf_formatado)
+                if cliente:
+                    print(cliente)
+                else:
+                    print("Cliente não encontrado.")
             else:
-                print("Cliente não encontrado.")
+                print("CPF inválido.")
 
         elif op == "0":
             break
@@ -65,6 +71,7 @@ def menu_funcionario(clientes, quartos, reservas):
         print("3 - Consultar reservas")
         print("4 - Check-in")
         print("5 - Check-out")
+        print("6 - Cadastrar novo quarto")
         print("0 - Voltar")
 
         op = input("Escolha: ")
@@ -83,6 +90,9 @@ def menu_funcionario(clientes, quartos, reservas):
 
         elif op == "5":
             realizar_checkout(clientes, reservas, quartos)
+        
+        elif op == "6":
+            cadastrar_quarto_interface(quartos)
 
         elif op == "0":
             break
@@ -98,9 +108,15 @@ def cadastrar_cliente_interface(clientes):
     nome = input("Nome: ")
     cpf = input("CPF: ")
     
+    # Validação e Formatação de CPF
+    cpf_formatado = formatar_cpf(cpf)
+    if not cpf_formatado:
+        print("Erro: CPF inválido. Certifique-se de digitar os 11 dígitos.")
+        return
+
     try:
         idade = int(input("Idade: "))
-    except:
+    except ValueError:
         print("Idade inválida.")
         return
 
@@ -109,14 +125,42 @@ def cadastrar_cliente_interface(clientes):
     telefone = input("Telefone: ")
 
     sucesso, msg = cadastrar_novo_cliente(
-        clientes, nome, cpf, idade, cidade, email, telefone
+        clientes, nome, cpf_formatado, idade, cidade, email, telefone
     )
 
     print(msg)
 
+def cadastrar_quarto_interface(quartos):
+    print("\n--- CADASTRAR NOVO QUARTO ---")
+    num = input("Número do quarto: ")
+    print("Tipos: standard, master, deluxe, suite")
+    tipo = input("Tipo: ").lower()
+    
+    # Importação local para evitar o ImportError
+    from quartos import adicionar_novo_quarto
+    from dados import salvar_quartos 
+    
+    if tipo in ["standard", "master", "deluxe", "suite"]:
+        if adicionar_novo_quarto(quartos, num, tipo):
+            salvar_quartos(quartos)
+            print(f"Quarto {num} cadastrado com sucesso!")
+    else:
+        print("Tipo de quarto inválido.")
 
 def listar_quartos(quartos):
     print("\n----- QUARTOS -----")
 
     for q in quartos.values():
         print(f"{q.numero} | {q.tipo} | {q.status} | R${q.preco}")
+
+
+def formatar_cpf(cpf_cru):
+    # Remove qualquer caractere que não seja número (pontos e o traço: XXX.XXX.XXX-XX)
+    apenas_numeros = "".join(filter(str.isdigit, cpf_cru))
+    
+    # Verifica se tem os 11 dígitos
+    if len(apenas_numeros) != 11:
+        return None
+    
+    # Retorna no formato: XXX.XXX.XXX-XX
+    return f"{apenas_numeros[:3]}.{apenas_numeros[3:6]}.{apenas_numeros[6:9]}-{apenas_numeros[9:]}"

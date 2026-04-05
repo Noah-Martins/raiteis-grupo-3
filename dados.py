@@ -54,3 +54,5 @@ def salvar_quartos(quartos):
           "status": Configuracoes.status_invertido[quarto.status], 
           "preco": Configuracoes.precos_invertido[str(int(quarto.preco))]
       })
+
+      
