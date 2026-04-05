@@ -5,6 +5,7 @@ from reservas import (
     realizar_checkin,
     realizar_checkout
 )
+from quartos import adicionar_novo_quarto
 
 SENHA_FUNCIONARIO = "hotelraiteis"
 
@@ -65,6 +66,7 @@ def menu_funcionario(clientes, quartos, reservas):
         print("3 - Consultar reservas")
         print("4 - Check-in")
         print("5 - Check-out")
+        print("6 - Cadastrar novo quarto")
         print("0 - Voltar")
 
         op = input("Escolha: ")
@@ -83,6 +85,9 @@ def menu_funcionario(clientes, quartos, reservas):
 
         elif op == "5":
             realizar_checkout(clientes, reservas, quartos)
+        
+        elif op == "6":
+            cadastrar_quarto_interface(quartos)
 
         elif op == "0":
             break
@@ -113,6 +118,21 @@ def cadastrar_cliente_interface(clientes):
     )
 
     print(msg)
+
+
+def cadastrar_quarto_interface(quartos):
+    print("\n--- CADASTRAR NOVO QUARTO ---")
+    num = input("Número do quarto: ")
+    print("Tipos: standard, master, deluxe, suite")
+    tipo = input("Tipo: ").lower()
+    
+    if tipo in ["standard", "master", "deluxe", "suite"]:
+        if adicionar_novo_quarto(quartos, num, tipo):
+            from dados import salvar_quartos # Import local para evitar erro circular
+            salvar_quartos(quartos)
+            print(f"Quarto {num} cadastrado com sucesso!")
+    else:
+        print("Tipo de quarto inválido.")
 
 
 def listar_quartos(quartos):
