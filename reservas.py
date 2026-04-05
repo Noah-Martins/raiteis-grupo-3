@@ -72,8 +72,9 @@ def registrar_reserva(clientesdict, quartos, reservas):
         print("Quarto não registrado.\n")
         return
     
-    if quarto.status != "Disponível":
-        print("Quarto indisponível.\n")
+    status_limpo = quarto.status.strip().lower().replace("í", "i")
+    if status_limpo != "disponivel":
+        print("Quarto indisponível.")
         return
     
     valor_pagar = quarto.preco * diarias
