@@ -30,6 +30,13 @@ def carregar_clientes():
             clientes_carregados[c.cpf] = c
     return clientes_carregados
 
+#carrega o histórico de reservas para cada cliente a partir da lista de reservas
+def carregar_historico(clientes_dict, reservas):
+    for r in reservas:
+        cliente = clientes_dict.get(r["cpfcliente"])
+        if cliente:
+            cliente.historico_reservas.append(r)
+
 # Carrega os dados dos quartos
 def carregar_quartos():
     from quartos import Quarto
