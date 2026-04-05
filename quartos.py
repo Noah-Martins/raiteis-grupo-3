@@ -56,15 +56,7 @@ class Hotel():
         return standard | master | deluxes | suites 
     
     
-    def adicionar_novo_quarto(quartos_dict, numero, tipo):
-        if numero in quartos_dict:
-            print("Erro: Este número de quarto já existe!")
-            return False
-        
-        # Cria o novo objeto quarto (o status inicial é sempre disponível)
-        novo_q = Quarto(numero, tipo, "disponivel", tipo)
-        quartos_dict[numero] = novo_q
-        return True
+
         
 
     # Busca um quarto
@@ -73,3 +65,12 @@ class Hotel():
 
 
 
+def adicionar_novo_quarto(quartos_dict, numero, tipo):
+    if numero in quartos_dict:
+        print("Erro: Este número de quarto já existe!")
+        return False
+        
+        # Cria o novo objeto quarto (o status inicial é sempre disponível)
+    novo_q = Quarto(numero, tipo, "disponivel", tipo)
+    quartos_dict[numero] = novo_q
+    return True

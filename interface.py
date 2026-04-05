@@ -5,7 +5,7 @@ from reservas import (
     realizar_checkin,
     realizar_checkout
 )
-from quartos import adicionar_novo_quarto
+
 
 SENHA_FUNCIONARIO = "hotelraiteis"
 
@@ -126,14 +126,16 @@ def cadastrar_quarto_interface(quartos):
     print("Tipos: standard, master, deluxe, suite")
     tipo = input("Tipo: ").lower()
     
+    # Importação local para evitar o ImportError
+    from quartos import adicionar_novo_quarto
+    from dados import salvar_quartos 
+    
     if tipo in ["standard", "master", "deluxe", "suite"]:
         if adicionar_novo_quarto(quartos, num, tipo):
-            from dados import salvar_quartos # Import local para evitar erro circular
             salvar_quartos(quartos)
             print(f"Quarto {num} cadastrado com sucesso!")
     else:
         print("Tipo de quarto inválido.")
-
 
 def listar_quartos(quartos):
     print("\n----- QUARTOS -----")
